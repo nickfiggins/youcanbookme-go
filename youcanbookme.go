@@ -24,7 +24,6 @@ type Client struct {
 	baseURL string
 	CurrentUser Account
 	Accounts *AccountsService
-	Profiles *ProfilesService
 }
 
 func NewClient(client *http.Client) *Client {
@@ -39,7 +38,6 @@ func NewClient(client *http.Client) *Client {
 		baseURL: baseAddress,
 		CurrentUser: currentUser,
 		Accounts: newAccountsService(base.New()),
-		Profiles: newProfilesService(base.New(), currentUser),
 	}
 }
 
@@ -47,5 +45,7 @@ func GetSelf(sling *sling.Sling) (Account, *http.Response, error) {
 	apiError := new(APIError)
 	var acc Account
 	resp, err := sling.New().Get("me").Receive(&acc, apiError)
+	acc.Sling = sling.New().Base(baseAddress + "/" + acc.ID + "/")
+	acc.Profiles = newProfilesService(acc.Sling.New(), acc)
 	return acc, resp, relevantError(err, *apiError)
 }

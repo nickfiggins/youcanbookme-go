@@ -21,30 +21,17 @@ type ProfilesService struct {
 	CurrentUser Account
 }
 
-type ProfileInput struct {
-	AccountId string
-}
-
 
 func newProfilesService(sling *sling.Sling, user Account) *ProfilesService {
 	return &ProfilesService{
-		sling: sling.Path("profiles/"),
+		sling: sling.Path("profiles"),
 		CurrentUser: user,
 	}
 }
 
-func (s *ProfilesService) GetCurrentProfiles() ([]Profile, *http.Response, error) {
-	return s.get(ProfileInput{AccountId: s.CurrentUser.ID})
-}
-
-func (s *ProfilesService) GetProfiles(accountId string) ([]Profile, *http.Response, error) {
-	return s.get(ProfileInput{AccountId: accountId})
-}
-
-func (s * ProfilesService) get(ProfileInput) ([]Profile, *http.Response, error) {
+func (s *ProfilesService) GetProfiles() ([]Profile, *http.Response, error) {
 	apiError := new(APIError)
 	var profiles []Profile
-	accountId := s.CurrentUser.ID
-	resp, err := s.sling.New().Get("").Path(accountId).Receive(&profiles, apiError)
+	resp, err := s.sling.New().Receive(&profiles, apiError)
 	return profiles, resp, relevantError(err, *apiError)
 }
