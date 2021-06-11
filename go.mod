@@ -2,6 +2,7 @@ module github.com/nickfiggins/youcanbookme-go
 
 go 1.16
 
+replace youcanbookme => ./youcanbookme
 
 require (
 	github.com/dghubble/sling v1.3.0
