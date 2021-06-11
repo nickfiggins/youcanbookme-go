@@ -1,6 +1,8 @@
-module github.com/nickfiggins/youcanbookme-go
+module youcanbookme
 
 go 1.16
+
+replace github.com/nickfiggins/youcanbookme-go => ./youcanbookme
 
 require (
 	github.com/dghubble/sling v1.3.0

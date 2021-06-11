@@ -37,7 +37,7 @@ func newAccountsService(sling *sling.Sling) *AccountsService {
 func (s *AccountsService) Get(id string) (Account, *http.Response, error) {
 	apiError := new(APIError)
 	var acc Account
-	accountSling := s.sling.New().Path(id + "/")
+	accountSling := s.sling.New().Get("").Path(id + "/")
 	resp, err := accountSling.Receive(&acc, apiError)
 	acc.Sling = accountSling
 	acc.Profiles = newProfilesService(acc.Sling.New(), acc)
