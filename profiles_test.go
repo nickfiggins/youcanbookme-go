@@ -33,7 +33,6 @@ func TestCurrentUserProfiles(t *testing.T) {
 
 func TestUserProfiles(t *testing.T) { 
 	ycbm := NewClient(http.DefaultClient)
-	fmt.Println(ycbm.CurrentUser.Sling)
 
 	expectedProfile := Profile{
 			ID: "198a48fa-1f74-4b61-a093-8be5e8f19474",
@@ -55,4 +54,13 @@ func TestUserProfiles(t *testing.T) {
 
 	assert.Equal(t, 1, len(profiles))
 	assert.Equal(t, expectedProfile, profiles[0])
+}
+
+func TestUserProfileById(t *testing.T) {
+	ycbm := NewClient(http.DefaultClient)
+	profile, _, err := ycbm.CurrentUser.Profiles.GetProfileById("198a48fa-1f74-4b61-a093-8be5e8f19474"); if err != nil {
+		t.Log("Error finding profile: ", err)
+	}
+
+	assert.Equal(t, "Nick Figgins", profile.Title)
 }

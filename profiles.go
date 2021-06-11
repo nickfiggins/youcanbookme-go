@@ -24,7 +24,7 @@ type ProfilesService struct {
 
 func newProfilesService(sling *sling.Sling, user Account) *ProfilesService {
 	return &ProfilesService{
-		sling: sling.Path("profiles"),
+		sling: sling.Path("profiles/"),
 		CurrentUser: user,
 	}
 }
@@ -34,4 +34,11 @@ func (s *ProfilesService) GetProfiles() ([]Profile, *http.Response, error) {
 	var profiles []Profile
 	resp, err := s.sling.New().Receive(&profiles, apiError)
 	return profiles, resp, relevantError(err, *apiError)
+}
+
+func (s *ProfilesService) GetProfileById(id string) (Profile, *http.Response, error) {
+	apiError := new(APIError)
+	var profile Profile
+	resp, err := s.sling.New().Path(id).Receive(&profile, apiError)
+	return profile, resp, relevantError(err, *apiError)
 }
