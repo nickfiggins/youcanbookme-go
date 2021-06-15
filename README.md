@@ -1,3 +1,3 @@
-api wrapper for golang api
+golang api wrapper for youcanbookme
 
 WIP
