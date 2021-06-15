@@ -21,7 +21,7 @@ import (
 )
 
 client := ycbm.NewClient() 
-bookings, err := client.currentUser.Bookings.GetBookings(); if err != nil {
+bookings, err := client.CurrentUser.Bookings.GetBookings(); if err != nil {
     fmt.Println(err)
 }
 fmt.Println(bookings)
