@@ -28,7 +28,7 @@ type Client struct {
 
 func NewClient(client *http.Client) *Client {
 	godotenv.Load("auth.env")
-	authClient := GetAuth(os.Getenv("email"), os.Getenv("password"))
+	authClient := GetAuth(os.Getenv("YCBM_EMAIL"), os.Getenv("YCBM_KEY"))
 	base := authClient.New().Client(client).Base(baseAddress + "/")
 	currentUser, _, err := GetSelf(base); if err != nil {
 		fmt.Println("Error", err)
