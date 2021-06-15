@@ -41,11 +41,27 @@ func NewClient(client *http.Client) *Client {
 	}
 }
 
+func NewTestClient(client *http.Client) *Client {
+	godotenv.Load("auth.env")
+	authClient := GetAuth(os.Getenv("TEST_EMAIL"), os.Getenv("TEST_API_KEY"))
+	base := authClient.New().Client(client).Base(baseAddress + "/")
+	currentUser, _, err := GetSelf(base); if err != nil {
+		fmt.Println("Error", err)
+	}
+	return &Client{
+		sling: base,
+		baseURL: baseAddress,
+		CurrentUser: currentUser,
+		Accounts: newAccountsService(base.New()),
+	}
+}
+
 func GetSelf(sling *sling.Sling) (Account, *http.Response, error) {
 	apiError := new(APIError)
 	var acc Account
 	resp, err := sling.New().Get("me").Receive(&acc, apiError)
 	acc.Sling = sling.New().Base(baseAddress + "/" + acc.ID + "/")
 	acc.Profiles = newProfilesService(acc.Sling.New(), acc)
+	acc.Bookings = newBookingsService(acc.Sling.New(), acc)
 	return acc, resp, relevantError(err, *apiError)
 }

@@ -13,6 +13,7 @@ type Profile struct {
 	Subdomain   string      `json:"subdomain"`
 	Timezone    string `json:"timeZone"`
 	Status      string      `json:"status"`
+	Bookings		  *BookingsService
 }
 
 // AccountService provides a method for account credential verification.
@@ -33,6 +34,9 @@ func (s *ProfilesService) GetProfiles() ([]Profile, *http.Response, error) {
 	apiError := new(APIError)
 	var profiles []Profile
 	resp, err := s.sling.New().Receive(&profiles, apiError)
+	for idx, _ := range profiles {
+		profiles[idx].Bookings = newBookingsService(s.sling.New().Path(profiles[idx].ID + "/"), s.CurrentUser)
+	}
 	return profiles, resp, relevantError(err, *apiError)
 }
 
@@ -40,5 +44,6 @@ func (s *ProfilesService) GetProfileById(id string) (Profile, *http.Response, er
 	apiError := new(APIError)
 	var profile Profile
 	resp, err := s.sling.New().Path(id).Receive(&profile, apiError)
+	profile.Bookings = newBookingsService(s.sling.New().Path(profile.ID + "/"), s.CurrentUser)
 	return profile, resp, relevantError(err, *apiError)
 }

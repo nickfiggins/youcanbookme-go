@@ -20,6 +20,7 @@ type Account struct {
 	Smscredits        int       	`json:"smsCredits"`
 	Sling			  *sling.Sling
     Profiles	      *ProfilesService
+	Bookings		  *BookingsService
 }
 
 // AccountService provides a method for account credential verification.
@@ -41,6 +42,7 @@ func (s *AccountsService) Get(id string) (Account, *http.Response, error) {
 	resp, err := accountSling.Receive(&acc, apiError)
 	acc.Sling = accountSling
 	acc.Profiles = newProfilesService(acc.Sling.New(), acc)
+	acc.Bookings = newBookingsService(acc.Sling.New(), acc)
 	return acc, resp, relevantError(err, *apiError)
 }
 
